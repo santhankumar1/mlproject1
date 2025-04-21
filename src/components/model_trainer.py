@@ -10,7 +10,7 @@ from sklearn.ensemble import (
     AdaBoostRegressor
 )
 
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression,Lasso
 from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.tree import DecisionTreeRegressor
@@ -41,18 +41,66 @@ class ModelTrainer:
             )
 
             models={
-                'RadomForest':RandomForestRegressor(),
+                'RandomForest':RandomForestRegressor(),
                 'GradientBoosting':GradientBoostingRegressor(),
                 'AdaBoost':AdaBoostRegressor(),
                 'LinearRegression':LinearRegression(),
+                'Lasso':Lasso(),
                 'KNeighbors':KNeighborsRegressor(),
                 'DecisionTree':DecisionTreeRegressor(),
                 'XGBRegressor':XGBRegressor(),
                 'CatBoost':CatBoostRegressor(verbose=0),
 
             }
+            params = {
+                    "RandomForest": {
+                   "n_estimators": [10, 30, 50, 100, 200],
+                     },
+                    "GradientBoosting": {
+                    "learning_rate": [0.01, 0.1, 0.2, 0.002, 0.3, 0.03],
+                    "n_estimators": [5, 50, 100, 200, 250]
+                    },
+                "AdaBoost": {
+                 "learning_rate": [0.01, 0.1, 0.2, 0.02, 0.3, 0.03],
+                 "n_estimators": [5, 50, 100, 200, 250],
+                  },
 
-            model_report:dict=evaluate_model(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models)
+                 "LinearRegression": {
+                    "fit_intercept": [True, False]
+                   },
+
+                   "Lasso":{'alpha': [0.01, 0.1, 1.0, 10.0],
+                           'fit_intercept': [True, False],
+                            'max_iter': [1000, 5000, 10000]
+                       
+                   },
+
+                 "KNeighbors": {
+                    "n_neighbors": [3, 5, 7, 9, 11],
+                        
+                        },
+
+                     "DecisionTree": {
+                     "criterion": ['squared_error', 'absolute_error', 'friedman_mse', 'poisson'],
+                       
+                      },
+
+                  "XGBRegressor": {
+                     "learning_rate": [0.01, 0.1, 0.2, 0.002, 0.3, 0.03],
+                     "n_estimators": [5, 50, 100, 200, 250],
+                       },
+
+                    "CatBoost": {
+                    "learning_rate": [0.01, 0.1, 0.2, 0.002, 0.3, 0.03],
+                     "n_estimators": [1, 34, 104, 240, 350],
+              },
+}
+            
+
+
+            
+
+            model_report:dict=evaluate_model(x_train=x_train,y_train=y_train,x_test=x_test,y_test=y_test,models=models,params=params)
 
             ##To get best model score from the dict
             best_model_score=max(sorted(model_report.values()))

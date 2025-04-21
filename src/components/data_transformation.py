@@ -93,8 +93,7 @@ class DataTransformation:
 
             return(
                 train_arr,
-                test_arr,
-                self.data_tranformation_config.preprocess_object_file_path
+                test_arr
             )
 
 
